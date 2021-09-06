@@ -5,6 +5,7 @@ import classnames from 'classnames/bind';
 import Header from '../components/Header';
 
 import styles from '../styles/Home.module.scss';
+import React from "react";
 
 const cx = classnames.bind(styles);
 
@@ -21,6 +22,8 @@ const Home: NextPage = () => {
             </Head>
 
             <Header />
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6783684768888814"
+                    crossOrigin="anonymous"></script>
         </div>
     );
 };
