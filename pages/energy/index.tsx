@@ -1,14 +1,10 @@
-import type { NextPage } from 'next';
+import React from 'react';
+import styles from '../../styles/Home.module.scss';
 import Head from 'next/head';
-import classnames from 'classnames/bind';
+import Header from '../../components/Header';
+import EnergyCounter from '../../components/EnergyCounter';
 
-import Header from '../components/Header';
-
-import styles from '../styles/Home.module.scss';
-
-const cx = classnames.bind(styles);
-
-const Home: NextPage = () => {
+const EnergyCounterPage: React.FC = () => {
     return (
         <div className={styles.container}>
             <Head>
@@ -21,8 +17,9 @@ const Home: NextPage = () => {
             </Head>
 
             <Header />
+            <EnergyCounter />
         </div>
     );
 };
 
-export default Home;
+export default EnergyCounterPage;
