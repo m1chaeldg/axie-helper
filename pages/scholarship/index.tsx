@@ -33,17 +33,17 @@ const ScholarshipPage: React.FC = () => {
                 <h3>Introduction</h3>
                 <p>
                     Hello aspiring scholars! I am looking forward to receive
-                    your application. I've loved playing games since young and
+                    your application. I&apos;ve loved playing games since young and
                     always dream of being able to play and earn. In Axies
-                    Infinity, and not only we can earn from it, it's a fun game
+                    Infinity, and not only we can earn from it, it&apos;s a fun game
                     too! I hope this scholarship can give you the opportunity to
-                    earn money and experience the fun at the same time.{' '}
+                    earn money and experience the fun at the same time.
                 </p>
 
                 <p>
                     We want someone who is passionate and willing to put in the
-                    time to learn the games. Here are the qualities we're
-                    looking for:{' '}
+                    time to learn the games. Here are the qualities we&apos;re
+                    looking for:
                 </p>
 
                 <p>
@@ -83,10 +83,10 @@ const ScholarshipPage: React.FC = () => {
                             200 SLP per day, the split will be further increased
                             to 40/60 (Manager/Scholar). We reward you for being
                             a good player and scholar! If you refer a friend,
-                            you will earn 10% of that person's earning on top of
+                            you will earn 10% of that person&apos;s earning on top of
                             your split since day 1! Once probation is over for
                             your friend, both of you get a sign up bonus of 100
-                            SLP. *Do take note that you'll be responsible to
+                            SLP. *Do take note that you&apos;ll be responsible to
                             recommend people of good conduct, who you can voush
                             for, as if the referral violates rules and as a
                             result have to be terminated, the referee will be
@@ -106,8 +106,8 @@ const ScholarshipPage: React.FC = () => {
                             termination Probation period: No show or
                             uncontactable for over 48 hours will result in
                             immediate termination We encouraged you to take a
-                            break every now and then, because we don't want you
-                            to burnt yourself out. From 2nd week onwards, you'll
+                            break every now and then, because we don&apos;t want you
+                            to burnt yourself out. From 2nd week onwards, you&apos;ll
                             be entitled to one day rest every week. Take a rest
                             or fight for more SLP if you feel like it! If there
                             are special situation that you are unable to play
