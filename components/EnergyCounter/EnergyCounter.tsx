@@ -63,6 +63,13 @@ const EnergyCounter: React.FC = () => {
 
     return (
         <div className={cx('container')}>
+            <ins
+                className="adsbygoogle"
+                style={{ display: 'block' }}
+                data-ad-client="ca-pub-6783684768888814"
+                data-ad-slot="12121212"
+                data-ad-format="auto"
+            />
             <div className={cx('counter-container')}>
                 <div className={cx('count')}>{count}</div>
 
@@ -106,6 +113,8 @@ const EnergyCounter: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6783684768888814"
+                    crossOrigin="anonymous"></script>
         </div>
     );
 };
