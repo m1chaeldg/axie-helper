@@ -1,8 +1,9 @@
 import React from 'react';
-import styles from '../../styles/Home.module.scss';
 import Head from 'next/head';
 import Header from '../../components/Header';
 import EnergyCounter from '../../components/EnergyCounter';
+
+import styles from '../../styles/Home.module.scss';
 
 const EnergyCounterPage: React.FC = () => {
     return (

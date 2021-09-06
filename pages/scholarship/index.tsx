@@ -1,8 +1,9 @@
 import React from 'react';
 import Header from '../../components/Header';
-import styles from './scholarship.module.scss';
 import classnames from 'classnames/bind';
 import Head from 'next/head';
+
+import styles from './scholarship.module.scss';
 
 const cx = classnames.bind(styles);
 
