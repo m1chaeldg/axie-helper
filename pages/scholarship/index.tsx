@@ -102,7 +102,6 @@ const ScholarshipPage: React.FC = () => {
                         <li>
                             {' '}
                             If target is not met: 1st time - verbal warning 2nd
-                            time - 50 SLP reduction 3rd time - scholarship
                             termination Probation period: No show or
                             uncontactable for over 48 hours will result in
                             immediate termination We encouraged you to take a

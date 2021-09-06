@@ -16,7 +16,7 @@ const EnergyCounter: React.FC = () => {
     };
 
     const addTwoCount = () => {
-        if (count === 10) {
+        if (count > 8) {
             return;
         }
         setCount((prevState) => prevState + 2);
