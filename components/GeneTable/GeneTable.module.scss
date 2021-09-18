@@ -1,0 +1,17 @@
+@import 'common/Common';
+
+.container {
+  .table {
+    padding: 8px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    width: 350px;
+    background-color: $axie-marketplace-background;
+
+    th {
+      color: white;
+    }
+
+  }
+}

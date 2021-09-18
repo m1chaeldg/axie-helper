@@ -3,6 +3,7 @@ import classnames from 'classnames/bind';
 import Link from 'next/link';
 
 import styles from './Header.module.scss';
+import { ENABLE_PLAYGROUND, ENABLE_SCHOLARSHIP_PAGE } from '../../flags';
 
 const cx = classnames.bind(styles);
 
@@ -16,7 +17,12 @@ const Header: React.FC = () => {
             <div>
                 {/*<Link href="/">Home</Link>*/}
                 <Link href="/energy">Energy Counter</Link>
-                <Link href="/scholarship">Apply Scholarship</Link>
+                {ENABLE_SCHOLARSHIP_PAGE && (
+                    <Link href="/scholarship">Apply Scholarship</Link>
+                )}
+                {ENABLE_PLAYGROUND && (
+                    <Link href="/playground">Playground</Link>
+                )}
             </div>
         </div>
     );
