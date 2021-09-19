@@ -1,0 +1,13 @@
+.container {
+    //width: 80%;
+    display: flex;
+    flex-direction: column;
+
+    .axies-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 24px;
+    }
+}

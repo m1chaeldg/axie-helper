@@ -1,31 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classnames from 'classnames/bind';
-import Image from 'next/image';
 import axios from 'axios';
-import { AxieGene } from 'agp-npm/dist/axie-gene';
 
 import Header from '../../components/Header';
 import PriceTracker from '../../components/PriceTracker';
 
 import styles from './playground.module.scss';
 import { TextField } from '@mui/material';
-import GeneTable from '../../components/GeneTable';
-import AxieCard from "../../components/AxieCard";
-import {POSTGetAxieDetails} from "../../types";
+import AxieCard from '../../components/AxieCard';
+import { POSTGetAxieDetails } from '../../types';
+import {fetchData} from "../../common/utils";
 
 const cx = classnames.bind(styles);
-
 
 const Playground: React.FC = () => {
     const [axieDetails, setAxieDetails] = useState<POSTGetAxieDetails>();
     const [axieId, setAxieId] = useState('');
+
+
     const handleGetAxieDetails = async () => {
         console.log(axieId);
         try {
-            const { data } = await axios.post(
-                'https://axieinfinity.com/graphql-server-v2/graphql',
-                {
-                    query: `query GetAxieDetail($axieId: ID!) {
+            const data = await fetchData(
+                `query GetAxieDetail($axieId: ID!) {
                         axie(axieId: $axieId) {
                             ...AxieDetail    
                             __typename  
@@ -48,17 +45,18 @@ const Playground: React.FC = () => {
                     }
                
                     `,
-                    variables: {
-                        axieId,
-                    },
+                {
+                    axieId,
                 }
             );
-            setAxieDetails(data);
+
+            setAxieDetails(data.data.axies);
         } catch (err) {
             console.log(err);
         }
     };
     console.log(axieDetails);
+
 
 
 
@@ -82,10 +80,10 @@ const Playground: React.FC = () => {
                     </button>
                 </div>
 
-                {axieDetails && (
-                    <AxieCard axieDetails={axieDetails} />
-                )}
+                {axieDetails && <AxieCard axieDetails={axieDetails} />}
                 <PriceTracker />
+
+
             </div>
         </div>
     );

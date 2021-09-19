@@ -22,16 +22,19 @@ export default function AxieCard({ axieDetails } : AxieCardProps) {
         <>
             <div className={cx('container')}>
                 <Image
-                    src={axieDetails.data.axie.image}
+                    src={axieDetails.image}
                     width={320}
                     height={240}
                 />
 
-                <GeneTable genes={decodeGene(axieDetails.data.axie.genes)} />
+                <GeneTable genes={decodeGene(axieDetails.genes)} />
             </div>
             <div>
                 Gene Quality:
-                {decodeGene(axieDetails.data.axie.genes).getGeneQuality()}%
+                {decodeGene(axieDetails.genes).getGeneQuality()}%
+            </div>
+            <div>
+                Breed Count: {axieDetails.breedCount}
             </div>
         </>
     );

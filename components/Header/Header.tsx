@@ -23,6 +23,8 @@ const Header: React.FC = () => {
                 {ENABLE_PLAYGROUND && (
                     <Link href="/playground">Playground</Link>
                 )}
+
+                <Link href="/settings">Settings</Link>
             </div>
         </div>
     );
