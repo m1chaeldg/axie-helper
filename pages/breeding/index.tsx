@@ -6,9 +6,11 @@ import Layout from '../../components/Layout';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import AxieCard from '../../components/AxieCard';
 import { fetchData } from '../../common/utils';
-import { allClasses } from '../../common/constants';
+import {allClasses, maxBreedCount} from '../../common/constants';
+import PriceTracker from "../../components/PriceTracker";
 
 const cx = classnames.bind(styles);
+
 export default function BreedingPage() {
     const [axies, setAxies] = useState();
     const [filteredAxies, setFilteredAxies] = useState();
@@ -148,16 +150,17 @@ export default function BreedingPage() {
                             size="small"
                             onChange={handleChangeBreedCount}
                         >
-                            <MenuItem value={0}>0</MenuItem>
-                            <MenuItem value={1}>1</MenuItem>
-                            <MenuItem value={2}>2</MenuItem>
-                            <MenuItem value={3}>3</MenuItem>
-                            <MenuItem value={4}>4</MenuItem>
-                            <MenuItem value={7}>7</MenuItem>
+                            {
+                                new Array(maxBreedCount).fill(0).map((num, index) => (
+                                    <MenuItem value={index} key={index}>{index}</MenuItem>
+                                ))
+                            }
                         </Select>
                     </FormControl>
                 </div>
                 <button onClick={() => fetchRoninDetails()}>Fetch</button>
+
+                <PriceTracker />
                 <div className={cx('axies-container')}>
                     {filteredAxies?.map((axie) => (
                         <AxieCard axieDetails={axie} />

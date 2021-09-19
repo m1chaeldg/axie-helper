@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-
+import classnames from 'classnames/bind';
 import { TextField } from '@mui/material';
 
-import classnames from 'classnames/bind';
-import styles from './settings.module.scss';
 import Layout from '../../components/Layout';
+import styles from './settings.module.scss';
 
 const cx = classnames.bind(styles);
 

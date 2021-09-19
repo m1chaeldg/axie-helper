@@ -15,7 +15,6 @@ const Header: React.FC = () => {
             </div>
 
             <div>
-                {/*<Link href="/">Home</Link>*/}
                 <Link href="/energy">Energy Counter</Link>
                 {ENABLE_SCHOLARSHIP_PAGE && (
                     <Link href="/scholarship">Apply Scholarship</Link>

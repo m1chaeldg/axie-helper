@@ -20,3 +20,5 @@ export const allClasses = [
     'dawn',
     'mech',
 ];
+
+export const maxBreedCount = 7

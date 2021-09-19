@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import classnames from 'classnames/bind';
-import axios from 'axios';
-
-import Header from '../../components/Header';
 import PriceTracker from '../../components/PriceTracker';
 
 import styles from './playground.module.scss';
@@ -10,6 +7,7 @@ import { TextField } from '@mui/material';
 import AxieCard from '../../components/AxieCard';
 import { POSTGetAxieDetails } from '../../types';
 import {fetchData} from "../../common/utils";
+import Layout from "../../components/Layout";
 
 const cx = classnames.bind(styles);
 
@@ -42,6 +40,14 @@ const Playground: React.FC = () => {
                         sireId  
                         sireClass  
                         matronId  
+                        parts {
+                            id
+                            name
+                            class
+                            type
+                            specialGenes
+                            __typename 
+                        }
                     }
                
                     `,
@@ -50,7 +56,8 @@ const Playground: React.FC = () => {
                 }
             );
 
-            setAxieDetails(data.data.axies);
+            console.log(data)
+            setAxieDetails(data.data.axie);
         } catch (err) {
             console.log(err);
         }
@@ -61,8 +68,8 @@ const Playground: React.FC = () => {
 
 
     return (
-        <div>
-            <Header />
+        <Layout>
+
 
             <div className={cx('container')}>
                 <div className={cx('axie-id-input')}>
@@ -81,11 +88,8 @@ const Playground: React.FC = () => {
                 </div>
 
                 {axieDetails && <AxieCard axieDetails={axieDetails} />}
-                <PriceTracker />
-
-
             </div>
-        </div>
+        </Layout>
     );
 };
 

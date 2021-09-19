@@ -14,3 +14,4 @@ export const fetchData = async (
 
     return data;
 };
+
