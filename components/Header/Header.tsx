@@ -24,6 +24,7 @@ const Header: React.FC = () => {
                     <Link href="/playground">Playground</Link>
                 )}
 
+                <Link href="/breeding">Breeding</Link>
                 <Link href="/settings">Settings</Link>
             </div>
         </div>

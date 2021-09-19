@@ -1,0 +1,17 @@
+.container {
+  width: 80%;
+  margin: 0 auto;
+
+  .axies-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .filter-container {
+    display: flex;
+    margin: 24px 0;
+  }
+}

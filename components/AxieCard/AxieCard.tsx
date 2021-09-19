@@ -4,28 +4,29 @@ import classnames from 'classnames/bind';
 import styles from './AxieCard.module.scss';
 import Image from 'next/image';
 import GeneTable from '../GeneTable';
-import {AxieGene} from "agp-npm/dist/axie-gene";
-import { POSTGetAxieDetails } from "types";
+import { AxieGene } from 'agp-npm/dist/axie-gene';
+import { POSTGetAxieDetails } from 'types';
+import { Chip } from '@mui/material';
 
 const cx = classnames.bind(styles);
 
 type AxieCardProps = {
-    axieDetails: POSTGetAxieDetails
-}
-export default function AxieCard({ axieDetails } : AxieCardProps) {
+    axieDetails: POSTGetAxieDetails;
+};
+export default function AxieCard({ axieDetails }: AxieCardProps) {
     const decodeGene = (geneHex: string) => {
-        console.log(new AxieGene(geneHex));
+        // console.log(new AxieGene(geneHex));
         return new AxieGene(geneHex);
     };
 
     return (
-        <>
-            <div className={cx('container')}>
-                <Image
-                    src={axieDetails.image}
-                    width={320}
-                    height={240}
-                />
+        <div className={cx('container')}>
+            <div className={cx('title-container')}>
+                <h3>{axieDetails.name}</h3>
+                <Chip label={`#${axieDetails.id}`} />
+            </div>
+            <div className={cx('content-container')} >
+                <Image src={axieDetails.image} width={320} height={240} />
 
                 <GeneTable genes={decodeGene(axieDetails.genes)} />
             </div>
@@ -33,9 +34,7 @@ export default function AxieCard({ axieDetails } : AxieCardProps) {
                 Gene Quality:
                 {decodeGene(axieDetails.genes).getGeneQuality()}%
             </div>
-            <div>
-                Breed Count: {axieDetails.breedCount}
-            </div>
-        </>
+            <div>Breed Count: {axieDetails.breedCount}</div>
+        </div>
     );
 }
