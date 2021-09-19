@@ -1,87 +1,60 @@
 import React, { useEffect, useState } from 'react';
 import classnames from 'classnames/bind';
+import {
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+} from '@mui/material';
+
+import Layout from '../../components/Layout';
+import AxieCard from '../../components/AxieCard';
+import PriceTracker from '../../components/PriceTracker';
+import { allClasses, maxBreedCount } from '../../common/constants';
+import { fetchData } from '../../common/utils';
+import { getAxieBriefListQuery } from '../../queries';
 
 import styles from './Breeding.module.scss';
-import Layout from '../../components/Layout';
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import AxieCard from '../../components/AxieCard';
-import { fetchData } from '../../common/utils';
-import {allClasses, maxBreedCount} from '../../common/constants';
-import PriceTracker from "../../components/PriceTracker";
+import { POSTGetAxieDetails } from '../../types';
 
 const cx = classnames.bind(styles);
 
 export default function BreedingPage() {
-    const [axies, setAxies] = useState();
-    const [filteredAxies, setFilteredAxies] = useState();
+    const [axies, setAxies] = useState<POSTGetAxieDetails[]>([]);
+    const [filteredAxies, setFilteredAxies] = useState<POSTGetAxieDetails[]>(
+        []
+    );
     const [classFilter, setClassFilter] = useState('All');
     const [breedCountFilter, setBreedCountFilter] = useState(7);
-
+    const [axieClassOwned, setAxieClassOwned] = useState<string[]>([]);
     const fetchRoninDetails = async () => {
         try {
-            const data = await fetchData(
-                `query GetAxieBriefList($auctionType: AuctionType, $from: Int, $sort: SortBy, $size: Int, $owner: String) {
-                axies(auctionType: $auctionType, from: $from, sort: $sort, size: $size, owner: $owner) {
-                total
-                results {
-                    ...AxieBrief
-                    __typename
-                }
-                __typename
-                }
-            }
-                                  
-            fragment AxieBrief on Axie {
-                id  
-                name
-                stage
-                class
-                genes
-                breedCount
-                image
-                title
-                battleInfo {
-                    banned
-                    __typename
-                }
-                auction {
-                    currentPrice
-                    currentPriceUSD
-                    __typename
-                }
-                parts {
-                    id
-                    name
-                    class
-                    type
-                    specialGenes
-                    __typename 
-                }
-                __typename
-            }
-            `,
-                {
-                    axieId: '447258',
-                    from: 0,
-                    auctionType: 'All',
-                    owner: '0xbcb5f39deac3670f8a8275941ea52b3ef6b6bb3a',
-                }
-            );
-            console.log(data);
+            const data = await fetchData(getAxieBriefListQuery, {
+                from: 0,
+                auctionType: 'All',
+                owner: '0xbcb5f39deac3670f8a8275941ea52b3ef6b6bb3a',
+            });
+
             setAxies(data.data.axies.results);
             setFilteredAxies(data.data.axies.results);
+
+            const ownedClass = Array.from(
+                new Set(data.data.axies.results.map((axie: any) => axie.class.toLowerCase()))
+            ) as string[];
+            setAxieClassOwned(ownedClass);
         } catch (err) {
             console.log(err);
         }
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e: SelectChangeEvent) => {
         const selectedValue = e.target.value;
         setClassFilter(selectedValue);
     };
 
-    const handleChangeBreedCount = (e) => {
-        const selectedValue = e.target.value;
+    const handleChangeBreedCount = (e: SelectChangeEvent) => {
+        const selectedValue = parseInt(e.target.value, 10);
         setBreedCountFilter(selectedValue);
     };
 
@@ -90,6 +63,10 @@ export default function BreedingPage() {
             handleFilter();
         }
     }, [breedCountFilter, classFilter]);
+
+    useEffect(() => {
+        fetchRoninDetails();
+    }, []);
 
     const handleFilter = () => {
         let filtered =
@@ -123,8 +100,8 @@ export default function BreedingPage() {
                             onChange={handleChange}
                         >
                             <MenuItem value="All">All</MenuItem>
-                            {allClasses.map((axieClass) => (
-                                <MenuItem value={axieClass}>
+                            {axieClassOwned.map((axieClass, index) => (
+                                <MenuItem value={axieClass} key={index}>
                                     {axieClass
                                         .split('')
                                         .map((char, index) =>
@@ -145,25 +122,26 @@ export default function BreedingPage() {
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            value={breedCountFilter}
+                            value={breedCountFilter.toString()}
                             label="Breed Count"
                             size="small"
                             onChange={handleChangeBreedCount}
                         >
-                            {
-                                new Array(maxBreedCount).fill(0).map((num, index) => (
-                                    <MenuItem value={index} key={index}>{index}</MenuItem>
-                                ))
-                            }
+                            {new Array(maxBreedCount)
+                                .fill(0)
+                                .map((num, index) => (
+                                    <MenuItem value={index} key={index}>
+                                        {index}
+                                    </MenuItem>
+                                ))}
                         </Select>
                     </FormControl>
                 </div>
-                <button onClick={() => fetchRoninDetails()}>Fetch</button>
 
                 <PriceTracker />
                 <div className={cx('axies-container')}>
-                    {filteredAxies?.map((axie) => (
-                        <AxieCard axieDetails={axie} />
+                    {filteredAxies?.map((axie, index) => (
+                        <AxieCard axieDetails={axie} key={index} />
                     ))}
                 </div>
             </div>

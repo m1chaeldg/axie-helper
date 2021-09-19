@@ -1,33 +1,31 @@
 import React from 'react';
 import classnames from 'classnames/bind';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
-import { Link } from 'next/link';
-import styles from './AxieCard.module.scss';
-import Image from 'next/image';
-import GeneTable from '../GeneTable';
 import { AxieGene } from 'agp-npm/dist/axie-gene';
-import { POSTGetAxieDetails } from 'types';
+import Image from 'next/image';
 import { Chip } from '@mui/material';
+
+import GeneTable from '../GeneTable';
+import { POSTGetAxieDetails } from '../../types';
+
+import styles from './AxieCard.module.scss';
 
 const cx = classnames.bind(styles);
 
 type AxieCardProps = {
     axieDetails: POSTGetAxieDetails;
 };
-export default function AxieCard({ axieDetails }: AxieCardProps) {
+
+const AxieCard: React.FC<AxieCardProps> = ({ axieDetails }) => {
     const decodeGene = (geneHex: string) => {
         console.log(new AxieGene(geneHex));
         return new AxieGene(geneHex);
     };
 
-    console.log(axieDetails);
-
     const constructFindSimilarQueries = (
         axieDetails: POSTGetAxieDetails,
         breedCount?: number
     ) => {
-        const query = new URLSearchParams();
-
         const baseUrl = 'https://axie.zone/finder?search=';
 
         const classQuery = `class:${axieDetails.class.toLowerCase()};`;
@@ -40,13 +38,11 @@ export default function AxieCard({ axieDetails }: AxieCardProps) {
             ';';
 
         const purityCount = axieDetails.parts.reduce((acc, part) => {
-            console.log(part.class.toLowerCase());
-            console.log(axieDetails.class.toLowerCase());
             if (part.class.toLowerCase() === axieDetails.class.toLowerCase()) {
                 return acc + 1;
             }
 
-            return acc
+            return acc;
         }, 0);
 
         const breedCountQuery = `breed_count:${
@@ -78,21 +74,29 @@ export default function AxieCard({ axieDetails }: AxieCardProps) {
                 </div>
                 <Chip label={`#${axieDetails.id}`} />
             </div>
+            <div className={cx('data-container')}>
+                <div>
+                    Gene Quality:&nbsp;
+                    {decodeGene(axieDetails.genes).getGeneQuality()}%
+                </div>
+                <div>Breed Count: {axieDetails.breedCount}</div>
+            </div>
             <div className={cx('content-container')}>
-                <Image src={axieDetails.image} width={320} height={240} />
+                <Image
+                    src={axieDetails.image}
+                    width={320}
+                    height={240}
+                    alt="image of axie"
+                />
 
                 <GeneTable genes={decodeGene(axieDetails.genes)} />
             </div>
-            <div>
-                Gene Quality:
-                {decodeGene(axieDetails.genes).getGeneQuality()}%
-            </div>
-            <div>Breed Count: {axieDetails.breedCount}</div>
-            <div>
+
+            <div className={cx('link-container')}>
                 <a
                     href={constructFindSimilarQueries(axieDetails)}
                     target="_blank"
-                    rel="noreferral noopener"
+                    rel="noreferrer noopener"
                 >
                     Look for exact same parts
                 </a>
@@ -100,11 +104,13 @@ export default function AxieCard({ axieDetails }: AxieCardProps) {
                 <a
                     href={constructFindSimilarQueries(axieDetails, 0)}
                     target="_blank"
-                    rel="noreferral noopener"
+                    rel="noreferrer noopener"
                 >
                     Look for 0 breed count
                 </a>
             </div>
         </div>
     );
-}
+};
+
+export default AxieCard;

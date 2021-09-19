@@ -11,4 +11,13 @@ export type POSTGetAxieDetails = {
     sireId: string;
     sireClass: string;
     matronId: string;
+    breedCount: number;
+    parts: {
+        id: string;
+        name: string;
+        class: string;
+        type: string;
+        specialGenes: null;
+        __typename: string;
+    }[];
 };
