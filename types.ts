@@ -6,12 +6,13 @@ export type POSTGetAxieDetails = {
     name: string;
     genes: string;
     owner: string;
-    birthDate: string;
+    birthDate: number;
     bodyShape: string;
     sireId: string;
     sireClass: string;
     matronId: string;
     breedCount: number;
+    stage: number;
     parts: {
         id: string;
         name: string;

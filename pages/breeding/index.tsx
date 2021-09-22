@@ -28,6 +28,8 @@ export default function BreedingPage() {
     const [classFilter, setClassFilter] = useState('All');
     const [breedCountFilter, setBreedCountFilter] = useState(7);
     const [axieClassOwned, setAxieClassOwned] = useState<string[]>([]);
+    const [breedPair, setBreedPair] = useState<POSTGetAxieDetails[]>([]);
+
     const fetchRoninDetails = async () => {
         try {
             const data = await fetchData(getAxieBriefListQuery, {
@@ -40,8 +42,17 @@ export default function BreedingPage() {
             setFilteredAxies(data.data.axies.results);
 
             const ownedClass = Array.from(
-                new Set(data.data.axies.results.map((axie: any) => axie.class.toLowerCase()))
+                new Set(
+                    data.data.axies.results.map((axie: any) => {
+                        if (!axie.class) {
+                            return 'Egg';
+                        }
+
+                        return axie.class?.toLowerCase();
+                    })
+                )
             ) as string[];
+            console.log(data.data.axies.results);
             setAxieClassOwned(ownedClass);
         } catch (err) {
             console.log(err);
@@ -73,7 +84,7 @@ export default function BreedingPage() {
             classFilter === 'All'
                 ? axies
                 : axies?.filter(
-                      (axie: any) => axie.class.toLowerCase() === classFilter
+                      (axie: any) => axie.class?.toLowerCase() === classFilter
                   );
 
         filtered = filtered.filter(
@@ -83,9 +94,33 @@ export default function BreedingPage() {
         setFilteredAxies(filtered);
     };
 
+    const handleSelectToCompare = (axie: POSTGetAxieDetails) => {
+        const foundIndex = breedPair.findIndex(
+            (selected) => selected.id === axie.id
+        );
+
+        if (foundIndex > -1) {
+            setBreedPair((prevState) =>
+                prevState.filter((selected) => selected.id !== axie.id)
+            );
+
+            return;
+        }
+
+        if (breedPair.length === 2) {
+            console.log('can only select 2');
+            return;
+        }
+
+        console.log('added');
+        setBreedPair((prevState) => [...prevState, axie]);
+    };
+
+    console.log(breedPair);
     return (
         <Layout>
             <div className={cx('container')}>
+                <PriceTracker />
                 <div className={cx('filter-container')}>
                     <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
@@ -103,7 +138,7 @@ export default function BreedingPage() {
                             {axieClassOwned.map((axieClass, index) => (
                                 <MenuItem value={axieClass} key={index}>
                                     {axieClass
-                                        .split('')
+                                        ?.split('')
                                         .map((char, index) =>
                                             index === 0
                                                 ? char.toUpperCase()
@@ -138,10 +173,28 @@ export default function BreedingPage() {
                     </FormControl>
                 </div>
 
-                <PriceTracker />
+                <div className={cx('comparison-container')}>
+                    <h3>Breeding Pair</h3>
+                    <div className={cx('card-container')}>
+                        {breedPair.map((axie) => (
+                            <AxieCard
+                                axieDetails={axie}
+                                handleSelectToCompare={handleSelectToCompare}
+                                breedPair={breedPair}
+                                key={axie.id}
+                            />
+                        ))}
+                    </div>
+                </div>
+
                 <div className={cx('axies-container')}>
                     {filteredAxies?.map((axie, index) => (
-                        <AxieCard axieDetails={axie} key={index} />
+                        <AxieCard
+                            axieDetails={axie}
+                            handleSelectToCompare={handleSelectToCompare}
+                            breedPair={breedPair}
+                            key={axie.id}
+                        />
                     ))}
                 </div>
             </div>

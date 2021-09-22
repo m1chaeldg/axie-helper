@@ -2,16 +2,21 @@
 
 .container {
   .table {
-    padding: 8px;
+    padding: 8px 12px;
     border: none;
     border-radius: 10px;
     font-weight: bold;
-    width: 350px;
+    width: 280px;
     background-color: $axie-marketplace-background;
+
 
     th {
       color: white;
+      font-size: 12px;
     }
 
+    td {
+      font-size: 12px;
+    }
   }
 }

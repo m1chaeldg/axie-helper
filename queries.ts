@@ -18,6 +18,7 @@ export const getAxieBriefListQuery = `query GetAxieBriefList($auctionType: Aucti
         breedCount
         image
         title
+        birthDate
         battleInfo {
             banned
             __typename

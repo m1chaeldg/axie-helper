@@ -7,7 +7,7 @@ export const axieClasses = [
     'aquatic',
 ];
 
-export const axieParts = ['eyes', 'ears', 'horn', 'mouth', 'back', 'tail'];
+export const axieParts = ['eyes', 'ears', 'back', 'mouth', 'horn', 'tail'];
 
 export const allClasses = [
     'plant',
@@ -21,4 +21,4 @@ export const allClasses = [
     'mech',
 ];
 
-export const maxBreedCount = 7
+export const maxBreedCount = 7;
