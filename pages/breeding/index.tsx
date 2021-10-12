@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import classnames from 'classnames/bind';
 import {
     FormControl,
@@ -25,25 +25,47 @@ export default function BreedingPage() {
     const [filteredAxies, setFilteredAxies] = useState<POSTGetAxieDetails[]>(
         []
     );
+    const d: { [key: string]: any } = {};
+
+    const [cacheAxies, setCacheAxies] = useState(d);
     const [classFilter, setClassFilter] = useState('All');
     const [breedCountFilter, setBreedCountFilter] = useState(7);
     const [axieClassOwned, setAxieClassOwned] = useState<string[]>([]);
     const [breedPair, setBreedPair] = useState<POSTGetAxieDetails[]>([]);
 
-    const fetchRoninDetails = async () => {
-        try {
-            const data = await fetchData(getAxieBriefListQuery, {
+    const fetchAxieDetailFunc = async () => {
+        const list: any[] = [];
+        const localSavedRonin = localStorage.getItem('ronin') || '';
+        const arr = localSavedRonin.split('\n');
+
+        for (let i = 0; i < arr.length; i++) {
+            const ronin = arr[i];
+            const result = await fetchData(getAxieBriefListQuery, {
                 from: 0,
                 auctionType: 'All',
-                owner: '0xbcb5f39deac3670f8a8275941ea52b3ef6b6bb3a',
+                owner: ronin.replace('ronin:', '0x'),
             });
 
-            setAxies(data.data.axies.results);
-            setFilteredAxies(data.data.axies.results);
+            result.data.axies.results.forEach((axie: any) => list.push(axie));
+        }
+        return list;
+    };
+
+    const fetchAxieDetail = useMemo(
+        async () => await fetchAxieDetailFunc(),
+        [localStorage.getItem('ronin') || '']
+    );
+
+    const fetchRoninDetails = async () => {
+        try {
+            const list = await fetchAxieDetail;
+
+            setAxies(list);
+            setFilteredAxies(list);
 
             const ownedClass = Array.from(
                 new Set(
-                    data.data.axies.results.map((axie: any) => {
+                    list.map((axie: any) => {
                         if (!axie.class) {
                             return 'Egg';
                         }
@@ -52,7 +74,7 @@ export default function BreedingPage() {
                     })
                 )
             ) as string[];
-            console.log(data.data.axies.results);
+            console.log(list);
             setAxieClassOwned(ownedClass);
         } catch (err) {
             console.log(err);
@@ -77,7 +99,7 @@ export default function BreedingPage() {
 
     useEffect(() => {
         fetchRoninDetails();
-    }, []);
+    }, [localStorage.getItem('ronin')]);
 
     const handleFilter = () => {
         let filtered =

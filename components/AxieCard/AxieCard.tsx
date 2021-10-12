@@ -3,13 +3,14 @@ import classnames from 'classnames/bind';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
 import { AxieGene } from 'agp-npm/dist/axie-gene';
 import Image from 'next/image';
-import { Chip } from '@mui/material';
-import { format } from 'date-fns';
+import { Chip, Button } from '@mui/material';
+import { format, parse } from 'date-fns';
 import GeneTable from '../GeneTable';
 import { POSTGetAxieDetails } from '../../types';
 
 import styles from './AxieCard.module.scss';
-import {constructFindSimilarQueries} from "./utils";
+import { constructFindSimilarQueries } from './utils';
+import { isBreedableFunc } from '../../common/utils';
 
 const cx = classnames.bind(styles);
 
@@ -37,14 +38,17 @@ const AxieCard: React.FC<AxieCardProps> = ({
         return new AxieGene(geneHex);
     };
 
-
-
     const isSelected = useMemo(
         () =>
             breedPair.findIndex((selected) => selected.id === axieDetails.id) >
             -1,
         [breedPair]
     );
+
+    let { breedable, reason } =
+        breedPair.length == 0
+            ? { breedable: true, reason: '' }
+            : isBreedableFunc(breedPair[0], axieDetails);
 
     return (
         <div className={cx('container')}>
@@ -64,16 +68,14 @@ const AxieCard: React.FC<AxieCardProps> = ({
             {!isEgg && (
                 <div className={cx('data-container')}>
                     <div>
-                        Gene Quality:&nbsp;
+                        BC: {axieDetails.breedCount}, H: {axieDetails.stats.hp},
+                        S: {axieDetails.stats.speed}, M:{' '}
+                        {axieDetails.stats.morale}, P:{' '}
                         {decodeGene(axieDetails.genes)?.getGeneQuality()}%
                     </div>
-                    <div>Breed Count: {axieDetails.breedCount}</div>
                 </div>
             )}
-            <div>
-                Birth Date:{' '}
-                {format(new Date(axieDetails.birthDate * 1000), 'dd-mm-yyyy')}
-            </div>
+
             {isEgg && (
                 <div>
                     Hatch Date: {deriveHatchDateTime(axieDetails.birthDate)}
@@ -90,10 +92,16 @@ const AxieCard: React.FC<AxieCardProps> = ({
                 {!isEgg && <GeneTable genes={decodeGene(axieDetails.genes)} />}
             </div>
 
-            {handleSelectToCompare && !isEgg && (
-                <button onClick={() => handleSelectToCompare(axieDetails)}>
+            {handleSelectToCompare && !isEgg && (isSelected || breedable) && (
+                <Button
+                    variant={isSelected ? 'contained' : 'outlined'}
+                    onClick={() => handleSelectToCompare(axieDetails)}
+                >
                     {isSelected ? 'Remove' : 'Select'}
-                </button>
+                </Button>
+            )}
+            {handleSelectToCompare && !isEgg && !isSelected && !breedable && (
+                <Button variant="outlined">Can not Breed: {reason}</Button>
             )}
 
             {!isEgg && (
