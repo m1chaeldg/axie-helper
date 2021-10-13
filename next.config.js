@@ -25,7 +25,7 @@ const securityHeaders = [
   },
   {
     key: 'Content-Security-Policy',
-    value: "default-src 'self' 'unsafe-inline' 'unsafe-eval' axieinfinity.com vitals.vercel-insights.com api.coingecko.com graphql-gateway.axieinfinity.com;img-src * 'self' data: https:;"
+    value: "default-src 'self' 'unsafe-inline' 'unsafe-eval' axieinfinity.com vitals.vercel-insights.com api.coingecko.com graphql-gateway.axieinfinity.com gstatic.com;img-src * 'self' data: https:;"
   },
   {
     key: 'Access-Control-Allow-Origin',
