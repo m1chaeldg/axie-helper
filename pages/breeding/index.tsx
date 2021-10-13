@@ -7,9 +7,12 @@ import {
     Select,
     SelectChangeEvent,
 } from '@mui/material';
+import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
 
 import Layout from '../../components/Layout';
 import AxieCard from '../../components/AxieCard';
+import { BreedingCalc } from '../../components/AxieCard/AxieAbilities';
+
 import PriceTracker from '../../components/PriceTracker';
 import { allClasses, maxBreedCount } from '../../common/constants';
 import { fetchData } from '../../common/utils';
@@ -17,17 +20,27 @@ import { getAxieBriefListQuery } from '../../queries';
 
 import styles from './Breeding.module.scss';
 import { POSTGetAxieDetails } from '../../types';
+import handler from '../api/hello';
 
 const cx = classnames.bind(styles);
+
+const cache: { [key: string]: any } = {};
+
+const memoize = async (handler: () => Promise<any>, arg: string) => {
+    if (cache.hasOwnProperty(arg)) {
+        return cache[arg];
+    }
+    const value = await handler();
+    cache[arg] = value;
+    return value;
+};
 
 export default function BreedingPage() {
     const [axies, setAxies] = useState<POSTGetAxieDetails[]>([]);
     const [filteredAxies, setFilteredAxies] = useState<POSTGetAxieDetails[]>(
         []
     );
-    const d: { [key: string]: any } = {};
 
-    const [cacheAxies, setCacheAxies] = useState(d);
     const [classFilter, setClassFilter] = useState('All');
     const [breedCountFilter, setBreedCountFilter] = useState(7);
     const [axieClassOwned, setAxieClassOwned] = useState<string[]>([]);
@@ -40,25 +53,24 @@ export default function BreedingPage() {
 
         for (let i = 0; i < arr.length; i++) {
             const ronin = arr[i];
-            const result = await fetchData(getAxieBriefListQuery, {
-                from: 0,
-                auctionType: 'All',
-                owner: ronin.replace('ronin:', '0x'),
-            });
+            const result = await memoize(
+                () =>
+                    fetchData(getAxieBriefListQuery, {
+                        from: 0,
+                        auctionType: 'All',
+                        owner: ronin.replace('ronin:', '0x'),
+                    }),
+                ronin
+            );
 
             result.data.axies.results.forEach((axie: any) => list.push(axie));
         }
         return list;
     };
 
-    const fetchAxieDetail = useMemo(
-        async () => await fetchAxieDetailFunc(),
-        [localStorage.getItem('ronin') || '']
-    );
-
     const fetchRoninDetails = async () => {
         try {
-            const list = await fetchAxieDetail;
+            const list = await fetchAxieDetailFunc();
 
             setAxies(list);
             setFilteredAxies(list);
@@ -99,7 +111,7 @@ export default function BreedingPage() {
 
     useEffect(() => {
         fetchRoninDetails();
-    }, [localStorage.getItem('ronin')]);
+    }, []);
 
     const handleFilter = () => {
         let filtered =
@@ -134,15 +146,25 @@ export default function BreedingPage() {
             return;
         }
 
-        console.log('added');
         setBreedPair((prevState) => [...prevState, axie]);
     };
+
+    const breadingUrl = useMemo(() => {
+        if (breedPair.length == 2)
+            return (
+                'https://freakitties.github.io/axie/calc.html?sireId=' +
+                breedPair[0].id +
+                '&matronId=' +
+                breedPair[1].id +
+                '&showDetails=true'
+            );
+        return '';
+    }, [breedPair]);
 
     console.log(breedPair);
     return (
         <Layout>
             <div className={cx('container')}>
-                <PriceTracker />
                 <div className={cx('filter-container')}>
                     <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
@@ -197,7 +219,7 @@ export default function BreedingPage() {
 
                 <div className={cx('comparison-container')}>
                     <h3>Breeding Pair</h3>
-                    <div className={cx('card-container')}>
+                    <div className={cx('axies-container')}>
                         {breedPair.map((axie) => (
                             <AxieCard
                                 axieDetails={axie}
@@ -206,6 +228,19 @@ export default function BreedingPage() {
                                 key={axie.id}
                             />
                         ))}
+                        {breedPair.length == 2 && (
+                            <div>
+                                <a
+                                    href={breadingUrl}
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
+                                    Open Breeding Calc
+                                    <OpenInNewOutlinedIcon />
+                                </a>
+                                <BreedingCalc breedPair={breedPair} />
+                            </div>
+                        )}
                     </div>
                 </div>
 

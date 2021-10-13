@@ -32,7 +32,7 @@ export type POSTGetAxieDetails = {
             description: string;
             backgroundUrl: string;
             effectIconUrl: string;
-        };
+        }[];
         __typename: string;
     }[];
     stats: {

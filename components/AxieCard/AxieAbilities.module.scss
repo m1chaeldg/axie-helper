@@ -1,0 +1,24 @@
+@import 'common/Common';
+
+.card_stats {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-flow: row;
+    background-color: rgb(40, 43, 57);
+    align-items: center;
+    width: 100%;
+
+    .energy {
+        // background-image: url('/images/atk.png');
+        color: #ffd010;
+    }
+    .atk {
+        // background-image: url('/images/atk.png');
+        color: #d24664;
+    }
+    .def {
+        // background-image: url('/images/def.png');
+        color: #319b6a;
+    }
+}

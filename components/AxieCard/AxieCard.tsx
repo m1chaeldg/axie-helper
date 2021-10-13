@@ -3,14 +3,15 @@ import classnames from 'classnames/bind';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
 import { AxieGene } from 'agp-npm/dist/axie-gene';
 import Image from 'next/image';
-import { Chip, Button } from '@mui/material';
+import { Chip, Button, LinearProgress, Stack } from '@mui/material';
 import { format, parse } from 'date-fns';
 import GeneTable from '../GeneTable';
 import { POSTGetAxieDetails } from '../../types';
+import { AxieAbilities, AxieParts } from './AxieAbilities';
+import { AxieStats } from './AxieStats';
 
 import styles from './AxieCard.module.scss';
-import { constructFindSimilarQueries } from './utils';
-import { isBreedableFunc } from '../../common/utils';
+import { constructFindSimilarQueries, isBreedableFunc } from './utils';
 
 const cx = classnames.bind(styles);
 
@@ -32,7 +33,7 @@ const AxieCard: React.FC<AxieCardProps> = ({
     handleSelectToCompare,
     breedPair,
 }) => {
-    const isEgg = axieDetails.genes === '0x0';
+    const isAxie = axieDetails.genes != '0x0';
 
     const decodeGene = (geneHex: string) => {
         return new AxieGene(geneHex);
@@ -45,10 +46,11 @@ const AxieCard: React.FC<AxieCardProps> = ({
         [breedPair]
     );
 
-    let { breedable, reason } =
+    const { breedable, reason } =
         breedPair.length == 0
             ? { breedable: true, reason: '' }
             : isBreedableFunc(breedPair[0], axieDetails);
+    const bc7Below = axieDetails.breedCount < 7;
 
     return (
         <div className={cx('container')}>
@@ -63,20 +65,19 @@ const AxieCard: React.FC<AxieCardProps> = ({
                         <OpenInNewOutlinedIcon />
                     </a>
                 </div>
-                <Chip label={`#${axieDetails.id}`} />
+                <Chip color="primary" label={`#${axieDetails.id}`} />
             </div>
-            {!isEgg && (
+
+            {isAxie && (
                 <div className={cx('data-container')}>
                     <div>
-                        BC: {axieDetails.breedCount}, H: {axieDetails.stats.hp},
-                        S: {axieDetails.stats.speed}, M:{' '}
-                        {axieDetails.stats.morale}, P:{' '}
+                        BC: {axieDetails.breedCount} P:{' '}
                         {decodeGene(axieDetails.genes)?.getGeneQuality()}%
                     </div>
+                    <div>Owner: {axieDetails.ownerProfile.name}</div>
                 </div>
             )}
-
-            {isEgg && (
+            {!isAxie && (
                 <div>
                     Hatch Date: {deriveHatchDateTime(axieDetails.birthDate)}
                 </div>
@@ -86,25 +87,33 @@ const AxieCard: React.FC<AxieCardProps> = ({
                     src={axieDetails.image}
                     width={200}
                     height={150}
-                    alt="image of axie"
+                    alt={axieDetails.name}
                 />
-
-                {!isEgg && <GeneTable genes={decodeGene(axieDetails.genes)} />}
+                <hr></hr>
+                {isAxie && <AxieAbilities axieDetails={axieDetails} />}
+                <hr></hr>
+                {isAxie && <AxieStats axieDetails={axieDetails} />}
+                <hr></hr>
+                {isAxie && <AxieParts axieDetails={axieDetails} />}
+                {isAxie && <GeneTable genes={decodeGene(axieDetails.genes)} />}
             </div>
 
-            {handleSelectToCompare && !isEgg && (isSelected || breedable) && (
-                <Button
-                    variant={isSelected ? 'contained' : 'outlined'}
-                    onClick={() => handleSelectToCompare(axieDetails)}
-                >
-                    {isSelected ? 'Remove' : 'Select'}
-                </Button>
-            )}
-            {handleSelectToCompare && !isEgg && !isSelected && !breedable && (
+            {handleSelectToCompare &&
+                isAxie &&
+                bc7Below &&
+                (isSelected || breedable) && (
+                    <Button
+                        variant={isSelected ? 'contained' : 'outlined'}
+                        onClick={() => handleSelectToCompare(axieDetails)}
+                    >
+                        {isSelected ? 'Remove' : 'Select'}
+                    </Button>
+                )}
+            {handleSelectToCompare && isAxie && !isSelected && !breedable && (
                 <Button variant="outlined">Can not Breed: {reason}</Button>
             )}
 
-            {!isEgg && (
+            {isAxie && (
                 <div className={cx('link-container')}>
                     <a
                         href={constructFindSimilarQueries(axieDetails)}
