@@ -24,6 +24,7 @@ const Header: React.FC = () => {
                 )}
 
                 <Link href="/breeding">Breeding</Link>
+                <Link href="/family-tree">Family Tree</Link>
                 <Link href="/settings">Settings</Link>
             </div>
         </div>

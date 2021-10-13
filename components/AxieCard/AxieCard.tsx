@@ -50,7 +50,7 @@ const AxieCard: React.FC<AxieCardProps> = ({
         breedPair.length == 0
             ? { breedable: true, reason: '' }
             : isBreedableFunc(breedPair[0], axieDetails);
-    const bc7Below = axieDetails.breedCount < 7;
+    const canBreed = axieDetails.breedCount < 7 && axieDetails.auction == null;
 
     return (
         <div className={cx('container')}>
@@ -100,7 +100,7 @@ const AxieCard: React.FC<AxieCardProps> = ({
 
             {handleSelectToCompare &&
                 isAxie &&
-                bc7Below &&
+                canBreed &&
                 (isSelected || breedable) && (
                     <Button
                         variant={isSelected ? 'contained' : 'outlined'}

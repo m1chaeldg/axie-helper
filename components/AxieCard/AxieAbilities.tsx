@@ -40,8 +40,8 @@ export const AxieAbilities: React.FC<AxieAbilitiesProps> = ({
 export const AxieParts: React.FC<AxieAbilitiesProps> = ({ axieDetails }) => {
     return (
         <div className={cx('card_stats')}>
-            {axieDetails.parts.map((p) => {
-                return <span>{p.name}</span>;
+            {axieDetails.parts.map((p, i) => {
+                return <span key={'p' + i}>{p.name} </span>;
             })}
         </div>
     );

@@ -13,27 +13,15 @@ import Layout from '../../components/Layout';
 import AxieCard from '../../components/AxieCard';
 import { BreedingCalc } from '../../components/AxieCard/AxieAbilities';
 
-import PriceTracker from '../../components/PriceTracker';
-import { allClasses, maxBreedCount } from '../../common/constants';
+import { maxBreedCount } from '../../common/constants';
 import { fetchData } from '../../common/utils';
 import { getAxieBriefListQuery } from '../../queries';
 
 import styles from './Breeding.module.scss';
 import { POSTGetAxieDetails } from '../../types';
-import handler from '../api/hello';
+import { memoize } from '../../common/memoize';
 
 const cx = classnames.bind(styles);
-
-const cache: { [key: string]: any } = {};
-
-const memoize = async (handler: () => Promise<any>, arg: string) => {
-    if (cache.hasOwnProperty(arg)) {
-        return cache[arg];
-    }
-    const value = await handler();
-    cache[arg] = value;
-    return value;
-};
 
 export default function BreedingPage() {
     const [axies, setAxies] = useState<POSTGetAxieDetails[]>([]);
@@ -42,7 +30,7 @@ export default function BreedingPage() {
     );
 
     const [classFilter, setClassFilter] = useState('All');
-    const [breedCountFilter, setBreedCountFilter] = useState(7);
+    const [breedCountFilter, setBreedCountFilter] = useState(6);
     const [axieClassOwned, setAxieClassOwned] = useState<string[]>([]);
     const [breedPair, setBreedPair] = useState<POSTGetAxieDetails[]>([]);
 
@@ -51,9 +39,8 @@ export default function BreedingPage() {
         const localSavedRonin = localStorage.getItem('ronin') || '';
         const arr = localSavedRonin.split('\n');
 
-        for (let i = 0; i < arr.length; i++) {
-            const ronin = arr[i];
-            const result = await memoize(
+        const promiseArray = arr.map(async (ronin) =>
+            memoize(
                 () =>
                     fetchData(getAxieBriefListQuery, {
                         from: 0,
@@ -61,10 +48,14 @@ export default function BreedingPage() {
                         owner: ronin.replace('ronin:', '0x'),
                     }),
                 ronin
-            );
+            )
+        );
 
+        const resolved = await Promise.all(promiseArray);
+        resolved.forEach((result) => {
             result.data.axies.results.forEach((axie: any) => list.push(axie));
-        }
+        });
+
         return list;
     };
 
@@ -86,7 +77,7 @@ export default function BreedingPage() {
                     })
                 )
             ) as string[];
-            console.log(list);
+
             setAxieClassOwned(ownedClass);
         } catch (err) {
             console.log(err);
@@ -161,7 +152,6 @@ export default function BreedingPage() {
         return '';
     }, [breedPair]);
 
-    console.log(breedPair);
     return (
         <Layout>
             <div className={cx('container')}>

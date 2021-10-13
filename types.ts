@@ -41,4 +41,8 @@ export type POSTGetAxieDetails = {
         skill: number;
         morale: number;
     };
+    auction: {
+        currentPrice: string;
+        currentPriceUSD: string;
+    }
 };
