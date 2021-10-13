@@ -26,6 +26,17 @@ const securityHeaders = [
   {
     key: 'Content-Security-Policy',
     value: "default-src 'self' axieinfinity.com vitals.vercel-insights.com"
+  },
+  {
+    key: 'Access-Control-Allow-Origin',
+    value: "*"
+  }, {
+    key: 'Access-Control-Allow-Headers',
+    value: "*"
+  },
+  {
+    key: 'Access-Control-Allow-Methods',
+    value: "*"
   }
 ]
 
