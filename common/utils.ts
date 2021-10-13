@@ -1,4 +1,5 @@
 import axios from "axios";
+import { POSTGetAxieDetails } from '../types';
 
 export const fetchData = async (
     query: string,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import classnames from 'classnames/bind';
-import { TextField } from '@mui/material';
+import { TextField, TextareaAutosize } from '@mui/material';
 
 import Layout from '../../components/Layout';
 import styles from './settings.module.scss';
@@ -28,14 +28,14 @@ export default function SettingsPage() {
             <div className={cx('container')}>
                 <div className={cx('content-container')}>
                     <div className={cx('ronin-address-input')}>
-                        <TextField
-                            label="Ronin Address"
-                            variant="outlined"
+                        <TextareaAutosize
+                            placeholder="Ronin Addresses"
+                            minRows={20}
                             onChange={(e) => setRoninAddress(e.target.value)}
                             className={cx('input')}
-                            value={roninAddress}
-                            size="small"
+                            defaultValue={roninAddress}
                             disabled={!isEdit}
+                            title="Ronin Addresses"
                         />
                         <button
                             className="btn btn-primary"
