@@ -119,8 +119,10 @@ export const BreedingCalc: React.FC<BreedingCalcProps> = ({ breedPair }) => {
 
     return (
         <div>
+            <br />
             <label>1st breed</label>
             {table(breedPair[0].breedCount + 1, breedPair[1].breedCount + 1)}
+            <br />
             <label>2nd breed</label>
             {table(breedPair[0].breedCount + 2, breedPair[1].breedCount + 2)}
         </div>

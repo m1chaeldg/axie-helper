@@ -23,8 +23,8 @@ const cx = classnames.bind(styles);
 export default function FamilyTreePage() {
     // const [axies, setAxies] = useState<{[key:string]: POSTGetAxieDetails}>({});
     const [axies, setAxies] = useState<POSTGetAxieDetails[]>([]);
-    const [data, setData] = useState<string[][]>([]);
-    const [data2, setData2] = useState<string[][]>([]);
+    const [data, setData] = useState<any[][]>([]);
+    const [data2, setData2] = useState<any[][]>([]);
     const [classFilter, setClassFilter] = useState('All');
     const [axieClassOwned, setAxieClassOwned] = useState<string[]>([]);
     // const [filteredAxies, setFilteredAxies] = useState<POSTGetAxieDetails[]>(
@@ -73,8 +73,63 @@ export default function FamilyTreePage() {
                 )
             ) as string[];
             setAxieClassOwned(ownedClass);
+            populateData();
         } catch (err) {
             console.log(err);
+        }
+    };
+
+    const populateData = () => {
+        if (axies) {
+            let filtered =
+                classFilter === 'All'
+                    ? axies
+                    : axies?.filter(
+                          (axie: any) =>
+                              axie.class?.toLowerCase() === classFilter
+                      );
+
+            const cache: { [key: string]: POSTGetAxieDetails } = {};
+            axies.forEach((c) => (cache[c.id.toString()] = c));
+
+            const colors: { [key: string]: string } = {
+                Plant: '#6cc000',
+                Beast: '#ffb812',
+                Aquatic: '#00b8ce',
+                Bug: '#ff5341',
+                Reptile: '#dc8be4',
+                Bird: '#ff8bbd',
+            };
+            const useStyle = false;
+
+            const data_ = filtered.map((a) => {
+                const parent = cache.hasOwnProperty(a.matronId)
+                    ? cache[a.matronId].name + '|' + a.matronId
+                    : a.matronId.toString();
+
+                const name = a.name + '|' + a.id;
+                const style = `<div style="color:${
+                    colors[a.class]
+                }; background:#242735;">${name}</div>`;
+
+                return [useStyle ? { v: name, f: style } : name, parent, ''];
+            });
+
+            const data2_ = filtered.map((a) => {
+                const parent = cache.hasOwnProperty(a.sireId)
+                    ? cache[a.sireId].name + '|' + a.sireId
+                    : a.sireId.toString();
+
+                const name = a.name + '|' + a.id;
+                const style = `<div style="color:${
+                    colors[a.class]
+                }; background:#242735;">${name}</div>`;
+
+                return [useStyle ? { v: name, f: style } : name, parent, ''];
+            });
+
+            setData([['Name', 'Parent', 'Tooltip'], ...data_]);
+            setData2([['Name', 'Parent', 'Tooltip'], ...data2_]);
         }
     };
 
@@ -88,44 +143,14 @@ export default function FamilyTreePage() {
     }, []);
 
     useEffect(() => {
-        if (axies) {
-            let filtered =
-                classFilter === 'All'
-                    ? axies
-                    : axies?.filter(
-                          (axie: any) =>
-                              axie.class?.toLowerCase() === classFilter
-                      );
-            console.log({ classFilter: filtered, axies });
-
-            const cache: { [key: string]: POSTGetAxieDetails } = {};
-            axies.forEach((c) => (cache[c.id.toString()] = c));
-
-            const data_ = filtered.map((a) => {
-                const parent = cache.hasOwnProperty(a.matronId)
-                    ? cache[a.matronId].name + '|' + a.matronId
-                    : a.matronId.toString();
-
-                return [a.name + '|' + a.id, parent, ''];
-            });
-
-            const data2_ = filtered.map((a) => {
-                const parent = cache.hasOwnProperty(a.sireId)
-                    ? cache[a.sireId].name + '|' + a.sireId
-                    : a.sireId.toString();
-
-                return [a.name + '|' + a.id, parent, ''];
-            });
-
-            setData([['Name', 'Parent', 'Tooltip'], ...data_]);
-            setData2([['Name', 'Parent', 'Tooltip'], ...data2_]);
-        }
-    }, [classFilter]);
+        populateData();
+    }, [classFilter, axies]);
 
     return (
         <Layout>
             <div className={cx('container')}>
                 <div className={cx('filter-container')}>
+                    <br />
                     <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                             Class
