@@ -6,15 +6,14 @@ import styles from './playground.module.scss';
 import { TextField } from '@mui/material';
 import AxieCard from '../../components/AxieCard';
 import { POSTGetAxieDetails } from '../../types';
-import {fetchData} from "../../common/utils";
-import Layout from "../../components/Layout";
+import { fetchData } from '../../common/utils';
+import Layout from '../../components/Layout';
 
 const cx = classnames.bind(styles);
 
 const Playground: React.FC = () => {
     const [axieDetails, setAxieDetails] = useState<POSTGetAxieDetails>();
     const [axieId, setAxieId] = useState('');
-
 
     const handleGetAxieDetails = async () => {
         console.log(axieId);
@@ -56,7 +55,7 @@ const Playground: React.FC = () => {
                 }
             );
 
-            console.log(data)
+            console.log(data);
             setAxieDetails(data.data.axie);
         } catch (err) {
             console.log(err);
@@ -64,13 +63,8 @@ const Playground: React.FC = () => {
     };
     console.log(axieDetails);
 
-
-
-
     return (
         <Layout>
-
-
             <div className={cx('container')}>
                 <div className={cx('axie-id-input')}>
                     <TextField
@@ -87,7 +81,9 @@ const Playground: React.FC = () => {
                     </button>
                 </div>
 
-                {axieDetails && <AxieCard axieDetails={axieDetails} />}
+                {axieDetails && (
+                    <AxieCard axieDetails={axieDetails} breedPair={[]} />
+                )}
             </div>
         </Layout>
     );

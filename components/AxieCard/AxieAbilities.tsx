@@ -52,8 +52,10 @@ export const AxieParts: React.FC<AxieAbilitiesProps> = ({ axieDetails }) => {
         <div className={cx('flex-container')}>
             {axieDetails.parts.map((p, i) => {
                 return (
-                    <div>
-                        <label className={cx(p.class) }>{p.name} {p.class}</label>
+                    <div key={i}>
+                        <label className={cx(p.class)}>
+                            {p.name} {p.class}
+                        </label>
                     </div>
                 );
             })}
