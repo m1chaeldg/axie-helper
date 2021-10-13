@@ -18,6 +18,7 @@ interface MyAxieGene extends AxieGene {
 export default function GeneTable({ genes }: GeneTableProps) {
     return (
         <div className={cx('container')}>
+            <h3>Genes</h3>
             <table className={cx('table')}>
                 <thead>
                     <tr>
