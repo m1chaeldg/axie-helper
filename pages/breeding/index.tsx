@@ -142,14 +142,21 @@ export default function BreedingPage() {
 
     const breadingUrl = useMemo(() => {
         if (breedPair.length == 2)
-            return (
-                'https://freakitties.github.io/axie/calc.html?sireId=' +
-                breedPair[0].id +
-                '&matronId=' +
-                breedPair[1].id +
-                '&showDetails=true'
-            );
-        return '';
+            return {
+                freak:
+                    'https://freakitties.github.io/axie/calc.html?sireId=' +
+                    breedPair[0].id +
+                    '&matronId=' +
+                    breedPair[1].id +
+                    '&showDetails=true',
+                axie_zone:
+                    'https://axie.zone/breeding-simulator?axie1=' +
+                    breedPair[0].id +
+                    '&axie2=' +
+                    breedPair[1].id,
+            };
+
+        return {};
     }, [breedPair]);
 
     return (
@@ -221,11 +228,20 @@ export default function BreedingPage() {
                         {breedPair.length == 2 && (
                             <div>
                                 <a
-                                    href={breadingUrl}
+                                    href={breadingUrl.freak}
                                     target="_blank"
                                     rel="noreferrer noopener"
                                 >
-                                    Open Breeding Calc
+                                    Open Freak Breeding Calc
+                                    <OpenInNewOutlinedIcon />
+                                </a>
+                                <br />
+                                <a
+                                    href={breadingUrl.axie_zone}
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
+                                    Open Axie Zone Breeding Simulator
                                     <OpenInNewOutlinedIcon />
                                 </a>
                                 <BreedingCalc breedPair={breedPair} />
