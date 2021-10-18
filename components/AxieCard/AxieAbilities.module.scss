@@ -22,3 +22,37 @@
         color: #319b6a;
     }
 }
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.flex-container > div {
+    width: 100px;
+    text-align: center;
+}
+.Plant {
+    color: #6cc000;
+    font-size: 13px;
+}
+.Beast {
+    color: #ffb812;
+    font-size: 13px;
+}
+.Aquatic {
+    color: #00b8ce;
+    font-size: 13px;
+}
+.Bug {
+    color: #ff5341;
+    font-size: 13px;
+}
+.Reptile {
+    color: #dc8be4;
+    font-size: 13px;
+}
+.Bird {
+    color: #ff8bbd;
+    font-size: 13px;
+}

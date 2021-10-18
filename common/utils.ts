@@ -6,7 +6,7 @@ export const fetchData = async (
     variables: { [key: string]: any }
 ) => {
     const { data } = await axios.post(
-        'https://axieinfinity.com/graphql-server-v2/graphql',
+        'https://graphql-gateway.axieinfinity.com/graphql',
         {
             query,
             variables,

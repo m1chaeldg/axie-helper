@@ -3,6 +3,16 @@ import classnames from 'classnames/bind';
 
 import styles from './AxieAbilities.module.scss';
 import { POSTGetAxieDetails } from '../../types';
+import {
+    Fab,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+} from '@mui/material';
 
 const cx = classnames.bind(styles);
 
@@ -39,10 +49,19 @@ export const AxieAbilities: React.FC<AxieAbilitiesProps> = ({
 
 export const AxieParts: React.FC<AxieAbilitiesProps> = ({ axieDetails }) => {
     return (
-        <div className={cx('card_stats')}>
-            {axieDetails.parts.map((p) => {
-                return <span>{p.name}</span>;
-            })}
+        <div>
+            <h3>Parts</h3>
+            <div className={cx('flex-container')}>
+                {axieDetails.parts.map((p, i) => {
+                    return (
+                        <div key={i}>
+                            <label className={cx(p.class)}>
+                                {p.name} {p.class}
+                            </label>
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 };
@@ -82,45 +101,74 @@ export const BreedingCalc: React.FC<BreedingCalcProps> = ({ breedPair }) => {
         };
         if (bc1 <= 7 && bc2 <= 7)
             return (
-                <table className={cx('table')}>
-                    <thead>
-                        <tr>
-                            <th>Parent</th>
-                            <th>SLP Cost</th>
-                            <th>AXS Cost</th>
-                            <th>Total in USD</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr>
-                            <td>Parent 1</td>
-                            <td>{cost.parent1.slp}</td>
-                            <td>{cost.parent1.axs}</td>
-                            <td>${cost.parent1.usd}</td>
-                        </tr>
-                        <tr>
-                            <td>Parent 2</td>
-                            <td>{cost.parent2.slp}</td>
-                            <td>{cost.parent2.axs}</td>
-                            <td>${cost.parent2.usd}</td>
-                        </tr>
-                        <tr>
-                            <td>Total</td>
-                            <td>{cost.parent1.slp + cost.parent2.slp}</td>
-                            <td>{cost.parent1.axs + cost.parent2.axs}</td>
-                            <td>${cost.parent1.usd + cost.parent2.usd}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <TableContainer component={Paper}>
+                    <Table size="small" aria-label="a dense table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Parent</TableCell>
+                                <TableCell align="right">SLP Cost</TableCell>
+                                <TableCell align="right">AXS Cost</TableCell>
+                                <TableCell align="right">
+                                    Total in USD
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell component="th" scope="row">
+                                    Parent 1
+                                </TableCell>
+                                <TableCell align="right">
+                                    {cost.parent1.slp}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {cost.parent1.axs}
+                                </TableCell>
+                                <TableCell align="right">
+                                    ${cost.parent1.usd}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell component="th" scope="row">
+                                    Parent 2
+                                </TableCell>
+                                <TableCell align="right">
+                                    {cost.parent2.slp}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {cost.parent2.axs}
+                                </TableCell>
+                                <TableCell align="right">
+                                    ${cost.parent2.usd}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell component="th" scope="row">
+                                    Total
+                                </TableCell>
+                                <TableCell align="right">
+                                    {cost.parent1.slp + cost.parent2.slp}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {cost.parent1.axs + cost.parent2.axs}
+                                </TableCell>
+                                <TableCell align="right">
+                                    ${cost.parent1.usd + cost.parent2.usd}
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             );
         return null;
     };
 
     return (
         <div>
+            <br />
             <label>1st breed</label>
             {table(breedPair[0].breedCount + 1, breedPair[1].breedCount + 1)}
+            <br />
             <label>2nd breed</label>
             {table(breedPair[0].breedCount + 2, breedPair[1].breedCount + 2)}
         </div>
