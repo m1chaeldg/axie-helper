@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    width: 350px;
+    min-height: 250px;
+    padding: 24px;
+    margin: 16px 0;
+
+    .coin-detail {
+        display: flex;
+
+        margin: 4px 0;
+        gap: 24px;
+
+        img {
+            flex-shrink: 0 ;
+            border: 1px solid red;
+        }
+
+        div {
+            display: flex;
+            align-items: center;
+        }
+
+        .percentage {
+            margin-left: auto;
+        }
+    }
+}
