@@ -6,6 +6,7 @@ import {
     MenuItem,
     Select,
     SelectChangeEvent,
+    Skeleton,
 } from '@mui/material';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
 
@@ -33,30 +34,39 @@ export default function BreedingPage() {
     const [breedCountFilter, setBreedCountFilter] = useState(6);
     const [axieClassOwned, setAxieClassOwned] = useState<string[]>([]);
     const [breedPair, setBreedPair] = useState<POSTGetAxieDetails[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const fetchAxieDetailFunc = async () => {
-        const list: any[] = [];
-        const localSavedRonin = localStorage.getItem('ronin') || '';
-        const arr = localSavedRonin.split('\n');
+        try {
+            setIsLoading(true);
 
-        const promiseArray = arr.map(async (ronin) =>
-            memoize(
-                () =>
-                    fetchData(getAxieBriefListQuery, {
-                        from: 0,
-                        auctionType: 'All',
-                        owner: ronin.replace('ronin:', '0x'),
-                    }),
-                ronin
-            )
-        );
+            const list: any[] = [];
+            const localSavedRonin = localStorage.getItem('ronin') || '';
+            const arr = localSavedRonin.split('\n');
 
-        const resolved = await Promise.all(promiseArray);
-        resolved.forEach((result) => {
-            result.data.axies.results.forEach((axie: any) => list.push(axie));
-        });
+            const promiseArray = arr.map(async (ronin) =>
+                memoize(
+                    () =>
+                        fetchData(getAxieBriefListQuery, {
+                            from: 0,
+                            auctionType: 'All',
+                            owner: ronin.replace('ronin:', '0x'),
+                        }),
+                    ronin
+                )
+            );
 
-        return list;
+            const resolved = await Promise.all(promiseArray);
+            resolved.forEach((result) => {
+                result.data.axies.results.forEach((axie: any) =>
+                    list.push(axie)
+                );
+            });
+
+            return list;
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const fetchRoninDetails = async () => {
@@ -251,14 +261,22 @@ export default function BreedingPage() {
                 </div>
 
                 <div className={cx('axies-container')}>
-                    {filteredAxies?.map((axie, index) => (
-                        <AxieCard
-                            axieDetails={axie}
-                            handleSelectToCompare={handleSelectToCompare}
-                            breedPair={breedPair}
-                            key={axie.id}
-                        />
-                    ))}
+                    {isLoading ? (
+                        <>
+                            <Skeleton animation="wave" />
+                            <Skeleton animation="wave" />
+                            <Skeleton animation="wave" />
+                        </>
+                    ) : (
+                        filteredAxies?.map((axie, index) => (
+                            <AxieCard
+                                axieDetails={axie}
+                                handleSelectToCompare={handleSelectToCompare}
+                                breedPair={breedPair}
+                                key={axie.id}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
         </Layout>

@@ -8,6 +8,7 @@ import styles from '../styles/Home.module.scss';
 import React from 'react';
 import Layout from '../components/Layout';
 import PriceTracker from '../components/PriceTracker';
+import BinancePriceTracker from '../components/CoinTracker';
 
 const cx = classnames.bind(styles);
 
@@ -27,6 +28,7 @@ const Home: NextPage = () => {
             <Layout>
                 <div className={cx('container')}>
                     <PriceTracker />
+                    <BinancePriceTracker />
                 </div>
             </Layout>
             {/* <script
